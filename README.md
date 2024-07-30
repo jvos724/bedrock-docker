@@ -38,9 +38,9 @@ Setup dev environment as needed:
 ```sh
 cd web/app/themes/sage
 composer install
+wp acorn acorn:install
 yarn install
 yarn build
-wp theme activate sage
 ```
 
 ## Existing installs
