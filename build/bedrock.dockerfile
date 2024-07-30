@@ -54,7 +54,7 @@ FROM php as bedrock
 LABEL name=bedrock
 
 # Install nginx & supervisor
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash \
     && apt-get update \
     && apt-get install -y \
     nginx \
