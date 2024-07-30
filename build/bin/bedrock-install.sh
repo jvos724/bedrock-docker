@@ -5,6 +5,7 @@ set -e
 cd /srv/bedrock
 
 composer install
+composer require roots/acorn
 
 wp core install --url=$WP_HOME \
   --title=bedrock \
