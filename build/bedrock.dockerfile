@@ -1,10 +1,10 @@
-FROM php:8.0-fpm as base
+FROM php:8.3-fpm as base
 LABEL name=bedrock
 LABEL intermediate=true
 
 # Install essential packages
 RUN apt-get update \
-  && apt-get install -y \
+    && apt-get install -y \
     build-essential \
     curl \
     git \
@@ -14,9 +14,9 @@ RUN apt-get update \
     vim \
     unzip \
     zip \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/* \
-  && apt-get clean
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 FROM base as php
 LABEL name=bedrock
@@ -25,17 +25,17 @@ LABEL intermediate=true
 # Install php extensions and related packages
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && sync \
-  && install-php-extensions \
+    && install-php-extensions \
     @composer \
     exif \
-    gd \ 
+    gd \
     memcached \
     mysqli \
     pcntl \
     pdo_mysql \
     zip \
-  && apt-get update \
-  && apt-get install -y \
+    && apt-get update \
+    && apt-get install -y \
     gifsicle \
     jpegoptim \
     libpng-dev \
@@ -46,24 +46,24 @@ RUN chmod +x /usr/local/bin/install-php-extensions && sync \
     lua-zlib-dev \
     optipng \
     pngquant \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/* \
-  && apt-get clean
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 FROM php as bedrock
 LABEL name=bedrock
 
 # Install nginx & supervisor
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
-  && apt-get update \
-  && apt-get install -y \
+    && apt-get update \
+    && apt-get install -y \
     nginx \
     nodejs \
     supervisor \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/* \
-  && apt-get clean \
-  && npm install -g yarn
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && npm install -g yarn
 
 # Configure nginx, php-fpm and supervisor
 COPY ./build/nginx/nginx.conf /etc/nginx/nginx.conf
@@ -74,11 +74,11 @@ COPY ./build/supervisor/supervisord.conf /etc/supervisord.conf
 
 # WordPress CLI
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-  && chmod +x wp-cli.phar \
-  && mv wp-cli.phar /usr/bin/_wp;
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/bin/_wp;
 COPY ./build/bin/wp.sh /srv/wp.sh
 RUN chmod +x /srv/wp.sh \
-  && mv /srv/wp.sh /usr/bin/wp
+    && mv /srv/wp.sh /usr/bin/wp
 
 # Installation helper
 COPY ./build/bin/bedrock-install.sh /srv/bedrock-install.sh
